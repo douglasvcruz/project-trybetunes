@@ -14,8 +14,8 @@ export default class MusicCard extends Component {
   }
 
   songs = async () => {
-    const { musica } = this.props;
     const som = await getFavoriteSongs();
+    const { musica } = this.props;
 
     som.forEach((element) => {
       if (element.trackId === musica.trackId) {
@@ -43,20 +43,21 @@ export default class MusicCard extends Component {
   render() {
     const { musica } = this.props;
     const { checked, loading } = this.state;
+    const { trackId, trackName, previewUrl } = musica;
     return (
       <div>
         <div>
-          <p>{musica.trackName}</p>
-          <audio data-testid="audio-component" src={ musica.previewUrl } controls>
+          <p>{trackName}</p>
+          <audio data-testid="audio-component" src={ previewUrl } controls>
             <track kind="captions" />
-            {`O seu navegador não suporta o elemento ${musica.previewUrl}`}
+            {`O seu navegador não suporta o elemento ${previewUrl}`}
             <code>audio</code>
           </audio>
           { loading ? <Loading /> : (
             <label htmlFor="checkbox">
               <input
                 name="trackId"
-                data-testid={ `checkbox-music-${musica.trackId}` }
+                data-testid={ `checkbox-music-${trackId}` }
                 type="checkbox"
                 checked={ checked }
                 onChange={ this.songAdd }
