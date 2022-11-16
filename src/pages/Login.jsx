@@ -35,8 +35,9 @@ export default class Login extends Component {
       <div data-testid="page-login">
         { loading ? <Loading />
           : (
-            <form>
+            <form className="form">
               <input
+                className="login-text"
                 type="text"
                 id="name"
                 name="name"
@@ -46,6 +47,7 @@ export default class Login extends Component {
               />
               <button
                 type="button"
+                className="login-button"
                 data-testid="login-submit-button"
                 onClick={ this.users }
                 disabled={ name.length < num }

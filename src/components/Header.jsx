@@ -29,13 +29,34 @@ export default class Header extends Component {
         { loading
           ? <Loading />
           : (
-            <div data-testid="header-user-name">
-              {user}
-              <div>
-                <Link to="/search" data-testid="link-to-search">Search</Link>
-                <Link to="/favorites" data-testid="link-to-favorites">Favorites</Link>
-                <Link to="/profile" data-testid="link-to-profile">Profile</Link>
+            <div className="username" data-testid="header-user-name">
+              <div className="div-user">
+                <p className="trybe">Trybe</p>
+                <p className="douglas">
+                  {`Usuário: ${user}`}
+                </p>
               </div>
+              <Link
+                to="/search"
+                data-testid="link-to-search"
+                className="search"
+              >
+                Search
+              </Link>
+              <Link
+                to="/favorites"
+                data-testid="link-to-favorites"
+                className="favorites"
+              >
+                Favorites
+              </Link>
+              <Link
+                to="/profile"
+                data-testid="link-to-profile"
+                className="profile"
+              >
+                Profile
+              </Link>
             </div>
           )}
       </header>
