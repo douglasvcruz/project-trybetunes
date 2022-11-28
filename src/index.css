@@ -227,3 +227,11 @@ audio {
   font-size: 14px;
   margin-top: 20px;
 }
+
+.div-favorites {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  margin: auto;
+  width: 90%;
+}

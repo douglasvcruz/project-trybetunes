@@ -44,6 +44,11 @@ export default class MusicCard extends Component {
       this.setState({
         checked: false,
         loading: false,
+      }, () => {
+        const { func } = this.props;
+        if (func) {
+          func();
+        }
       });
     }
   };
@@ -66,15 +71,17 @@ export default class MusicCard extends Component {
             <code>audio</code>
           </audio>
           { loading ? <Loading /> : (
-            <label htmlFor="checkbox">
+            <label htmlFor={ trackId }>
               <input
                 className="check"
                 name="trackId"
+                id={ trackId }
                 data-testid={ `checkbox-music-${trackId}` }
                 type="checkbox"
                 checked={ checked }
                 onChange={ this.songAdd }
               />
+              Favorita
             </label>
           )}
         </div>
@@ -84,9 +91,10 @@ export default class MusicCard extends Component {
 }
 
 MusicCard.propTypes = {
+  func: PropTypes.func.isRequired,
   musica: PropTypes.shape({
-    trackName: PropTypes.string.isRequired,
     previewUrl: PropTypes.string.isRequired,
     trackId: PropTypes.number.isRequired,
+    trackName: PropTypes.string.isRequired,
   }).isRequired,
 };
