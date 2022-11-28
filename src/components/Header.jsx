@@ -33,7 +33,7 @@ export default class Header extends Component {
               <div className="div-user">
                 <p className="trybe">Trybe</p>
                 <p className="douglas">
-                  {`Usuário: ${user}`}
+                  {user}
                 </p>
               </div>
               <Link
