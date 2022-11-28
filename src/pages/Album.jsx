@@ -33,9 +33,9 @@ export default class Album extends Component {
     return (
       <div data-testid="page-album">
         <Header />
-        <div>
-          <p data-testid="artist-name">{test.artistName}</p>
-          <p data-testid="album-name">{test.collectionName}</p>
+        <div className="div-album">
+          <p className="artist-name" data-testid="artist-name">{test.artistName}</p>
+          <p className="album-name" data-testid="album-name">{test.collectionName}</p>
           {slice.map((a) => (
             <MusicCard key={ a.trackId } musica={ a } />
           ))}

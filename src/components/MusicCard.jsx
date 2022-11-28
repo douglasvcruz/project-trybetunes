@@ -1,6 +1,6 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
-import { addSong, getFavoriteSongs } from '../services/favoriteSongsAPI';
+import { addSong, getFavoriteSongs, removeSong } from '../services/favoriteSongsAPI';
 import Loading from '../pages/Loading';
 
 export default class MusicCard extends Component {
@@ -28,16 +28,24 @@ export default class MusicCard extends Component {
 
   songAdd = async () => {
     const { musica } = this.props;
+    const { checked } = this.state;
     this.setState({
       loading: true,
-      checked: false,
     });
-    await addSong(musica);
 
-    this.setState({
-      checked: true,
-      loading: false,
-    });
+    if (checked === false) {
+      await addSong(musica);
+      this.setState({
+        checked: true,
+        loading: false,
+      });
+    } else {
+      await removeSong(musica);
+      this.setState({
+        checked: false,
+        loading: false,
+      });
+    }
   };
 
   render() {
@@ -46,8 +54,12 @@ export default class MusicCard extends Component {
     const { trackId, trackName, previewUrl } = musica;
     return (
       <div>
-        <div>
-          <p>{trackName}</p>
+        <div className="music">
+          <p>
+          &nbsp;&nbsp;
+            {trackName}
+          &nbsp;&nbsp;
+          </p>
           <audio data-testid="audio-component" src={ previewUrl } controls>
             <track kind="captions" />
             {`O seu navegador não suporta o elemento ${previewUrl}`}
@@ -56,6 +68,7 @@ export default class MusicCard extends Component {
           { loading ? <Loading /> : (
             <label htmlFor="checkbox">
               <input
+                className="check"
                 name="trackId"
                 data-testid={ `checkbox-music-${trackId}` }
                 type="checkbox"
