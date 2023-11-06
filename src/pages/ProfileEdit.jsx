@@ -1,118 +1,104 @@
-import { Component } from 'react';
 import { Redirect } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import Header from '../components/Header';
 import { getUser, updateUser } from '../services/userAPI';
 import Loading from './Loading';
+import useHandleChange from '../hooks/useHandleChange';
 
-export default class Profile extends Component {
-  state = {
-    loading: false,
-    email: '',
-    name: '',
-    description: '',
-    image: '',
-    updated: false,
-  };
+export default function Profile() {
+  const email = useHandleChange('');
+  const name = useHandleChange('');
+  const description = useHandleChange('');
+  const image = useHandleChange('');
+  const [updated, setUpdated] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [disabled, setDisabled] = useState(true);
 
-  componentDidMount() {
-    this.user();
-  }
-
-  error = () => {
-    const { email } = this.state;
-
+  const validateEmail = () => {
     const re = /\S+@\S+\.\S+/;
-    const emailVerifica = re.test(email) && email.length !== 0;
-
-    return !emailVerifica;
+    const emailVerifica = re.test(email.value) && email.value.length !== 0;
+    if (emailVerifica) {
+      setDisabled(false);
+    }
   };
-
-  onInputChange = ({ target }) => {
-    const { name } = target;
-    const value = target.type === 'checkbox' ? target.checked : target.value;
-    this.setState({
-      [name]: value,
-    });
-  };
-
-  user = async () => {
-    this.setState({
-      loading: true,
-    });
+  const getUsers = async () => {
+    setLoading(true);
     const userInfo = await getUser();
-    this.setState({
-      email: userInfo.email,
-      name: userInfo.name,
-      description: userInfo.description,
-      image: userInfo.image,
-      loading: false,
-    });
+    email.setValue(userInfo.email);
+    name.setValue(userInfo.name);
+    description.setValue(userInfo.description);
+    image.setValue(userInfo.image);
+    setLoading(false);
   };
 
-  update = async () => {
-    const { email, name, description, image } = this.state;
-    this.setState({
-      loading: true,
+  const getUpdate = async () => {
+    setLoading(true);
+    await updateUser({
+      email: email.value,
+      name: name.value,
+      description: description.value,
+      image: image.value,
     });
-    await updateUser({ email, name, description, image });
-    this.setState({
-      updated: true,
-      loading: false,
-    });
+    setLoading(false);
+    setUpdated(true);
   };
 
-  render() {
-    const { loading, image, description,
-      email, name, updated } = this.state;
-    return (
-      <div data-testid="page-profile-edit">
-        <Header />
-        { loading ? <Loading />
-          : (
-            <div>
-              <input
-                type="text"
-                data-testid="edit-input-image"
-                value={ image }
-                name="image"
-                onChange={ this.onInputChange }
-              />
-              <span>Nome</span>
-              <input
-                type="text"
-                data-testid="edit-input-name"
-                value={ name }
-                name="name"
-                onChange={ this.onInputChange }
-              />
-              <span>E-mail</span>
-              <input
-                type="email"
-                data-testid="edit-input-email"
-                value={ email }
-                name="email"
-                onChange={ this.onInputChange }
-              />
-              <span>Descrição</span>
-              <input
-                type="text"
-                data-testid="edit-input-description"
-                value={ description }
-                name="description"
-                onChange={ this.onInputChange }
-              />
-              <button
-                type="submit"
-                data-testid="edit-button-save"
-                disabled={ this.error() }
-                onClick={ this.update }
-              >
-                Salvar
-              </button>
-            </div>
-          )}
-        { updated && <Redirect to="/profile" /> }
-      </div>
-    );
-  }
+  useEffect(() => {
+    validateEmail();
+  }, [email]);
+
+  useEffect(() => {
+    getUsers();
+  }, []);
+
+  return (
+    <div data-testid="page-profile-edit">
+      <Header />
+      {loading ? <Loading />
+        : (
+          <div>
+            <input
+              type="text"
+              data-testid="edit-input-image"
+              value={ image.value }
+              name="image"
+              onChange={ image.handleChange }
+            />
+            <span>Nome</span>
+            <input
+              type="text"
+              data-testid="edit-input-name"
+              value={ name.value }
+              name="name"
+              onChange={ name.handleChange }
+            />
+            <span>E-mail</span>
+            <input
+              type="email"
+              data-testid="edit-input-email"
+              value={ email.value }
+              name="email"
+              onChange={ email.handleChange }
+            />
+            <span>Descrição</span>
+            <input
+              type="text"
+              data-testid="edit-input-description"
+              value={ description.value }
+              name="description"
+              onChange={ description.handleChange }
+            />
+            <button
+              type="submit"
+              data-testid="edit-button-save"
+              disabled={ disabled }
+              onClick={ getUpdate }
+            >
+              Salvar
+            </button>
+          </div>
+        )}
+      {updated && <Redirect to="/profile" />}
+    </div>
+  );
 }

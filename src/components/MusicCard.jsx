@@ -1,100 +1,82 @@
-import { Component } from 'react';
+import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { addSong, getFavoriteSongs, removeSong } from '../services/favoriteSongsAPI';
 import Loading from '../pages/Loading';
 
-export default class MusicCard extends Component {
-  state = {
-    loading: false,
-    checked: false,
-  };
+export default function MusicCard({ music, func }) {
+  const [loading, setLoading] = useState(false);
+  const [checked, setChecked] = useState(false);
 
-  componentDidMount() {
-    this.songs();
-  }
-
-  songs = async () => {
-    const som = await getFavoriteSongs();
-    const { musica } = this.props;
-
-    som.forEach((element) => {
-      if (element.trackId === musica.trackId) {
-        this.setState({
-          checked: true,
-        });
+  const songs = async () => {
+    const favoriteSongs = await getFavoriteSongs();
+    favoriteSongs.forEach((element) => {
+      if (element.trackId === music.trackId) {
+        setChecked(true);
       }
     });
   };
 
-  songAdd = async () => {
-    const { musica } = this.props;
-    const { checked } = this.state;
-    this.setState({
-      loading: true,
-    });
-
+  const songAdd = async () => {
+    setLoading(true);
     if (checked === false) {
-      await addSong(musica);
-      this.setState({
-        checked: true,
-        loading: false,
-      });
+      await addSong(music);
+      setLoading(false);
+      setChecked(true);
     } else {
-      await removeSong(musica);
-      this.setState({
-        checked: false,
-        loading: false,
-      }, () => {
-        const { func } = this.props;
-        if (func) {
-          func();
-        }
-      });
+      await removeSong(music);
+      setLoading(false);
+      setChecked(false);
+      if (func) {
+        func();
+      }
     }
   };
 
-  render() {
-    const { musica } = this.props;
-    const { checked, loading } = this.state;
-    const { trackId, trackName, previewUrl } = musica;
-    return (
-      <div>
-        <div className="music">
-          <p>
+  useEffect(() => {
+    songs();
+  }, []);
+
+  return (
+    <div>
+      <div className="music">
+        <p>
           &nbsp;&nbsp;
-            {trackName}
+          {music.trackName}
           &nbsp;&nbsp;
-          </p>
-          <audio data-testid="audio-component" src={ previewUrl } controls>
-            <track kind="captions" />
-            {`O seu navegador não suporta o elemento ${previewUrl}`}
-            <code>audio</code>
-          </audio>
-          { loading ? <Loading /> : (
-            <label htmlFor={ trackId }>
-              <input
-                className="check"
-                name="trackId"
-                id={ trackId }
-                data-testid={ `checkbox-music-${trackId}` }
-                type="checkbox"
-                checked={ checked }
-                onChange={ this.songAdd }
-              />
-              Favorita
-            </label>
-          )}
-        </div>
+        </p>
+        <audio data-testid="audio-component" src={ music.previewUrl } controls>
+          <track kind="captions" />
+          {`O seu navegador não suporta o elemento ${music.previewUrl}`}
+          <code>audio</code>
+        </audio>
+        { loading ? <Loading /> : (
+          <label htmlFor={ music.trackId }>
+            <input
+              className="check"
+              name="music.trackId"
+              id={ music.trackId }
+              data-testid={ `checkbox-music-${music.trackId}` }
+              type="checkbox"
+              checked={ checked }
+              onChange={ songAdd }
+            />
+            Favorita
+          </label>
+        )}
       </div>
-    );
-  }
+    </div>
+  );
 }
 
+MusicCard.defaultProps = {
+  func: null,
+};
+
 MusicCard.propTypes = {
-  func: PropTypes.func.isRequired,
-  musica: PropTypes.shape({
+  func: PropTypes.func,
+  music: PropTypes.shape({
     previewUrl: PropTypes.string.isRequired,
-    trackId: PropTypes.number.isRequired,
+    trackId: PropTypes.string.isRequired,
     trackName: PropTypes.string.isRequired,
   }).isRequired,
 };

@@ -1,47 +1,38 @@
-import { Component } from 'react';
-import Header from '../components/Header';
+import { useEffect, useState } from 'react';
 import { getFavoriteSongs } from '../services/favoriteSongsAPI';
+import Header from '../components/Header';
 import MusicCard from '../components/MusicCard';
 import Loading from './Loading';
 
-export default class Favorites extends Component {
-  state = {
-    loading: false,
-    guardando: [],
+export default function Favorites() {
+  const [favorites, setFavorites] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  const saveFavorites = async () => {
+    setLoading(true);
+    const favoriteSongs = await getFavoriteSongs();
+    setFavorites(favoriteSongs);
+    setLoading(false);
   };
 
-  componentDidMount() {
-    this.favorito();
-  }
+  useEffect(() => {
+    saveFavorites();
+  }, []);
 
-  favorito = async () => {
-    this.setState({
-      loading: true,
-    });
-    const musicFavorite = await getFavoriteSongs();
-    this.setState({
-      guardando: musicFavorite,
-      loading: false,
-    });
-  };
-
-  render() {
-    const { guardando, loading } = this.state;
-    return (
-      <div data-testid="page-favorites">
-        <Header />
-        <div className="div-favorites">
-          { loading ? <Loading /> : (
-            guardando.map((a) => (
-              <MusicCard
-                key={ a.trackId }
-                musica={ a }
-                func={ this.favorito }
-              />
-            ))
-          )}
-        </div>
+  return (
+    <div data-testid="page-favorites">
+      <Header />
+      <div className="div-favorites">
+        {loading ? <Loading /> : (
+          favorites.map((a) => (
+            <MusicCard
+              key={ a.trackId }
+              music={ a }
+              func={ saveFavorites }
+            />
+          ))
+        )}
       </div>
-    );
-  }
+    </div>
+  );
 }

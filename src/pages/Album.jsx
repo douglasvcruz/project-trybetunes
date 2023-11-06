@@ -1,64 +1,44 @@
-import { Component } from 'react';
-import PropTypes from 'prop-types';
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom/cjs/react-router-dom.min';
 import Header from '../components/Header';
-import getMusics from '../services/musicsAPI';
+import getSongs from '../services/musicsAPI';
 import MusicCard from '../components/MusicCard';
 
-export default class Album extends Component {
-  state = {
-    musica: [],
-    test: [],
+export default function Album() {
+  const [music, setMusic] = useState([]);
+  const [test, setTest] = useState([]);
+  const { id } = useParams();
+
+  const getSong = async () => {
+    const song = await getSongs(id);
+    setMusic(song);
+    setTest(song[0]);
   };
 
-  componentDidMount() {
-    this.getMusic();
-  }
+  useEffect(() => {
+    getSong();
+  }, []);
 
-  getMusic = async () => {
-    const { match: {
-      params: { id },
-    } } = this.props;
-
-    const music = await getMusics(id);
-
-    this.setState({
-      musica: music,
-      test: music[0],
-    });
-  };
-
-  render() {
-    const { musica, test } = this.state;
-    const slice = musica.slice(1);
-    return (
-      <div data-testid="page-album">
-        <Header />
-        <div className="div-album">
-          <p
-            className="artist-name"
-            data-testid="artist-name"
-          >
-            {test.artistName}
-          </p>
-          <p
-            className="album-name"
-            data-testid="album-name"
-          >
-            {test.collectionName}
-          </p>
-          {slice.map((a) => (
-            <MusicCard key={ a.trackId } musica={ a } />
-          ))}
-        </div>
+  return (
+    <div data-testid="page-album">
+      <Header />
+      <div className="div-album">
+        <p
+          className="artist-name"
+          data-testid="artist-name"
+        >
+          {test.artistName}
+        </p>
+        <p
+          className="album-name"
+          data-testid="album-name"
+        >
+          {test.collectionName}
+        </p>
+        {music.slice(1).map((a) => (
+          <MusicCard key={ a.trackId } music={ a } />
+        ))}
       </div>
-    );
-  }
+    </div>
+  );
 }
-
-Album.propTypes = {
-  match: PropTypes.shape({
-    params: PropTypes.shape({
-      id: PropTypes.string,
-    }),
-  }).isRequired,
-};

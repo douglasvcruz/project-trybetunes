@@ -1,68 +1,46 @@
-import { Component } from 'react';
-import PropTypes from 'prop-types';
+import { useState } from 'react';
+import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
 import { createUser } from '../services/userAPI';
 import Loading from './Loading';
+import useHandleChange from '../hooks/useHandleChange';
 
-export default class Login extends Component {
-  state = {
-    loading: false,
-    name: '',
-  };
+export default function Login() {
+  const [loading, setLoading] = useState(false);
+  const name = useHandleChange('');
+  const history = useHistory();
 
-  handleChange = ({ target }) => {
-    const { name, value } = target;
-    this.setState({
-      [name]: value,
-    });
-  };
-
-  users = async () => {
-    const { name } = this.state;
-    const { history } = this.props;
-
-    this.setState({
-      loading: true,
-    });
-
-    await createUser({ name });
+  const users = async () => {
+    setLoading(true);
+    await createUser({ name: name.value });
     history.push('search');
   };
 
-  render() {
-    const { name, loading } = this.state;
-    const num = 3;
-    return (
-      <div data-testid="page-login">
-        { loading ? <Loading />
-          : (
-            <form className="form">
-              <input
-                className="login-text"
-                type="text"
-                id="name"
-                name="name"
-                value={ name }
-                onChange={ this.handleChange }
-                data-testid="login-name-input"
-              />
-              <button
-                type="button"
-                className="login-button"
-                data-testid="login-submit-button"
-                onClick={ this.users }
-                disabled={ name.length < num }
-              >
-                Entrar
-              </button>
-            </form>
-          )}
-      </div>
-    );
-  }
+  const num = 3;
+  return (
+    <div data-testid="page-login">
+      { loading ? <Loading />
+        : (
+          <form className="form">
+            <input
+              className="login-text"
+              type="text"
+              id="name"
+              name="name"
+              value={ name.value }
+              onChange={ name.handleChange }
+              data-testid="login-name-input"
+            />
+            <button
+              type="button"
+              className="login-button"
+              data-testid="login-submit-button"
+              onClick={ users }
+              disabled={ name.value.length < num }
+            >
+              Entrar
+            </button>
+          </form>
+        )}
+    </div>
+  );
 }
-
-Login.propTypes = {
-  history: PropTypes.shape({
-    push: PropTypes.func.isRequired,
-  }).isRequired,
-};

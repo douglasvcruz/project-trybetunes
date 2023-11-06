@@ -1,49 +1,42 @@
-import { Component } from 'react';
 import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import Header from '../components/Header';
 import { getUser } from '../services/userAPI';
 import Loading from './Loading';
 
-export default class Profile extends Component {
-  state = {
-    loading: false,
-    armazena: [],
-  };
+export default function Profile() {
+  const [loading, setLoading] = useState(false);
+  const [user, setUser] = useState([]);
 
-  componentDidMount() {
-    this.user();
-  }
-
-  user = async () => {
-    this.setState({
-      loading: true,
-    });
+  const getUsers = async () => {
+    setLoading(true);
     const userInfo = await getUser();
-    this.setState({
-      armazena: userInfo,
-      loading: false,
-    });
+    setLoading(false);
+    setUser(userInfo);
   };
 
-  render() {
-    const { loading, armazena } = this.state;
-    const { image, description, email, name } = armazena;
-    return (
-      <div data-testid="page-profile">
-        <Header />
-        { loading ? <Loading /> : (
-          <div>
-            <img data-testid="profile-image" src={ image } alt={ name } />
-            <Link to="/profile/edit">Editar perfil</Link>
-            <span>Nome</span>
-            <p>{name}</p>
-            <span>E-mail</span>
-            <p>{email}</p>
-            <span>Descrição</span>
-            <p>{description}</p>
-          </div>
-        )}
-      </div>
-    );
-  }
+  useEffect(() => {
+    getUsers();
+  }, []);
+
+  const { image, description, email, name } = user;
+  return (
+    <div data-testid="page-profile">
+      <Header />
+      { loading ? <Loading /> : (
+        <div>
+          <img data-testid="profile-image" src={ image } alt={ name } />
+          <br />
+          <Link to="/profile/edit">Editar perfil</Link>
+          <br />
+          <span>Nome</span>
+          <p>{name}</p>
+          <span>E-mail</span>
+          <p>{email}</p>
+          <span>Descrição</span>
+          <p>{description}</p>
+        </div>
+      )}
+    </div>
+  );
 }
