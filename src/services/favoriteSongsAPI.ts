@@ -2,12 +2,18 @@ const FAVORITE_SONGS_KEY = 'favorite_songs';
 const TIMEOUT = 500;
 const SUCCESS_STATUS = 'OK';
 
-if (!JSON.parse(localStorage.getItem(FAVORITE_SONGS_KEY))) {
+export type Song = {
+  trackId: string;
+  trackName: string;
+  previewUrl: string;
+}
+
+if (!JSON.parse(localStorage.getItem(FAVORITE_SONGS_KEY) || "")) {
   localStorage.setItem(FAVORITE_SONGS_KEY, JSON.stringify([]));
 }
-const readFavoriteSongs = () => JSON.parse(localStorage.getItem(FAVORITE_SONGS_KEY));
+const readFavoriteSongs = () => JSON.parse(localStorage.getItem(FAVORITE_SONGS_KEY)  || "");
 
-const saveFavoriteSongs = (favoriteSongs) => localStorage
+const saveFavoriteSongs = (favoriteSongs: object[]) => localStorage
   .setItem(FAVORITE_SONGS_KEY, JSON.stringify(favoriteSongs));
 
 // --------------------------------------------------------------------
@@ -17,18 +23,20 @@ const saveFavoriteSongs = (favoriteSongs) => localStorage
 // não se preocupe, estudaremos isso futuramente.
 // --------------------------------------------------------------------
 
-const simulateRequest = (response) => (callback) => {
+const simulateRequest = (response: string) => (callback: (response: string) => void) => {
   setTimeout(() => {
     callback(response);
   }, TIMEOUT);
 };
 
-export const getFavoriteSongs = () => new Promise((resolve) => {
+export const getFavoriteSongs = () => new Promise<Song[]>((resolve) => {
   const favoriteSongs = readFavoriteSongs();
-  simulateRequest(favoriteSongs)(resolve);
+  simulateRequest(JSON.stringify(favoriteSongs))((response: string) => {
+    resolve(JSON.parse(response));
+  });
 });
 
-export const addSong = (song) => new Promise((resolve) => {
+export const addSong = (song: Song) => new Promise((resolve) => {
   if (song) {
     const favoriteSongs = readFavoriteSongs();
     saveFavoriteSongs([...favoriteSongs, song]);
@@ -36,8 +44,8 @@ export const addSong = (song) => new Promise((resolve) => {
   simulateRequest(SUCCESS_STATUS)(resolve);
 });
 
-export const removeSong = (song) => new Promise((resolve) => {
+export const removeSong = (song: Song) => new Promise((resolve) => {
   const favoriteSongs = readFavoriteSongs();
-  saveFavoriteSongs(favoriteSongs.filter((s) => s.trackId !== song.trackId));
+  saveFavoriteSongs(favoriteSongs.filter((s: Song) => s.trackId !== song.trackId));
   simulateRequest(SUCCESS_STATUS)(resolve);
 });

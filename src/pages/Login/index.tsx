@@ -1,21 +1,21 @@
 import { useState } from 'react';
-import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
-import { createUser } from '../services/userAPI';
-import Loading from './Loading';
-import useHandleChange from '../hooks/useHandleChange';
+import { createUser } from '../../services/userAPI';
+import { useNavigate } from "react-router-dom";
+import Loading from '../Loading';
+import useHandleChange from '../../hooks/useHandleChange';
+const NUMBER_THREE = 3;
 
 export default function Login() {
   const [loading, setLoading] = useState(false);
-  const name = useHandleChange('');
-  const history = useHistory();
+  const { value: { name }, onChange } = useHandleChange({ name: "" });
+  const navigate = useNavigate();
 
   const users = async () => {
     setLoading(true);
-    await createUser({ name: name.value });
-    history.push('search');
+    await createUser({ name });
+    navigate('/search');
   };
 
-  const num = 3;
   return (
     <div data-testid="page-login">
       { loading ? <Loading />
@@ -26,8 +26,8 @@ export default function Login() {
               type="text"
               id="name"
               name="name"
-              value={ name.value }
-              onChange={ name.handleChange }
+              value={ name }
+              onChange={ onChange }
               data-testid="login-name-input"
             />
             <button
@@ -35,7 +35,7 @@ export default function Login() {
               className="login-button"
               data-testid="login-submit-button"
               onClick={ users }
-              disabled={ name.value.length < num }
+              disabled={ name.length < NUMBER_THREE }
             >
               Entrar
             </button>

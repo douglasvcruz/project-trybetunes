@@ -1,12 +1,13 @@
 import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import Header from '../components/Header';
-import { getUser } from '../services/userAPI';
-import Loading from './Loading';
+import Header from '../../components/Header';
+import { User, getUser } from '../../services/userAPI';
+import Loading from '../Loading';
 
 export default function Profile() {
   const [loading, setLoading] = useState(false);
-  const [user, setUser] = useState([]);
+  const [user, setUser] = useState<User>({ name: "" });
+  const { image, description, email, name } = user;
 
   const getUsers = async () => {
     setLoading(true);
@@ -19,7 +20,6 @@ export default function Profile() {
     getUsers();
   }, []);
 
-  const { image, description, email, name } = user;
   return (
     <div data-testid="page-profile">
       <Header />

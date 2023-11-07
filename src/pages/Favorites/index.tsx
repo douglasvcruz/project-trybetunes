@@ -1,16 +1,16 @@
 import { useEffect, useState } from 'react';
-import { getFavoriteSongs } from '../services/favoriteSongsAPI';
-import Header from '../components/Header';
-import MusicCard from '../components/MusicCard';
-import Loading from './Loading';
+import { Song, getFavoriteSongs } from '../../services/favoriteSongsAPI';
+import Header from '../../components/Header';
+import MusicCard from '../../components/MusicCard';
+import Loading from '../Loading';
 
 export default function Favorites() {
-  const [favorites, setFavorites] = useState([]);
+  const [favorites, setFavorites] = useState<Song[]>([]);
   const [loading, setLoading] = useState(false);
 
   const saveFavorites = async () => {
     setLoading(true);
-    const favoriteSongs = await getFavoriteSongs();
+    const favoriteSongs: Song[] = await getFavoriteSongs();
     setFavorites(favoriteSongs);
     setLoading(false);
   };

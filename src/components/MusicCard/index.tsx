@@ -1,9 +1,13 @@
 import { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
-import { addSong, getFavoriteSongs, removeSong } from '../services/favoriteSongsAPI';
-import Loading from '../pages/Loading';
+import { addSong, getFavoriteSongs, removeSong, Song } from '../../services/favoriteSongsAPI';
+import Loading from '../../pages/Loading';
 
-export default function MusicCard({ music, func }) {
+interface MusicCardProps {
+  music: Song;
+  func?: () => void;
+}
+
+export default function MusicCard({ music, func }: MusicCardProps) {
   const [loading, setLoading] = useState(false);
   const [checked, setChecked] = useState(false);
 
@@ -40,9 +44,7 @@ export default function MusicCard({ music, func }) {
     <div>
       <div className="music">
         <p>
-          &nbsp;&nbsp;
           {music.trackName}
-          &nbsp;&nbsp;
         </p>
         <audio data-testid="audio-component" src={ music.previewUrl } controls>
           <track kind="captions" />
@@ -67,16 +69,3 @@ export default function MusicCard({ music, func }) {
     </div>
   );
 }
-
-MusicCard.defaultProps = {
-  func: null,
-};
-
-MusicCard.propTypes = {
-  func: PropTypes.func,
-  music: PropTypes.shape({
-    previewUrl: PropTypes.string.isRequired,
-    trackId: PropTypes.string.isRequired,
-    trackName: PropTypes.string.isRequired,
-  }).isRequired,
-};
