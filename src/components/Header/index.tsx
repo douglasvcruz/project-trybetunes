@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { getUser } from '../../services/userAPI';
 import Loading from '../../pages/Loading';
+import "./style.css";
 
 function Header() {
   const [loading, setLoading] = useState(true);

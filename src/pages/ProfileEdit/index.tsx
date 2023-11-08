@@ -1,7 +1,7 @@
 import { Navigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import Header from "../../components/Header";
 import { getUser, updateUser } from "../../services/userAPI";
+import Header from "../../components/Header";
 import Loading from "../Loading";
 import useHandleChange from "../../hooks/useHandleChange";
 

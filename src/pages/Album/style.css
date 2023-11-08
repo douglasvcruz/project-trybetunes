@@ -1,0 +1,18 @@
+.div-album {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  margin: auto;
+  text-align: center;
+  width: 90%;
+}
+
+.artist-name, .album-name {
+  font-weight: 900;
+  margin-top: 30px;
+  width: 100%;
+}
+
+.album-name {
+  margin-bottom: 7px;
+}

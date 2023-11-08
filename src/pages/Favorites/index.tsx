@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
-import { Song, getFavoriteSongs } from '../../services/favoriteSongsAPI';
+import { getFavoriteSongs } from '../../services/favoriteSongsAPI';
+import { Song } from '../../interfaces/iSong';
 import Header from '../../components/Header';
 import MusicCard from '../../components/MusicCard';
 import Loading from '../Loading';
+import "./style.css";
 
 export default function Favorites() {
   const [favorites, setFavorites] = useState<Song[]>([]);

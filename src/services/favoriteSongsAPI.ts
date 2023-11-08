@@ -1,12 +1,8 @@
+import { Song } from "../interfaces/iSong";
+
 const FAVORITE_SONGS_KEY = 'favorite_songs';
 const TIMEOUT = 500;
 const SUCCESS_STATUS = 'OK';
-
-export type Song = {
-  trackId: string;
-  trackName: string;
-  previewUrl: string;
-}
 
 if (!JSON.parse(localStorage.getItem(FAVORITE_SONGS_KEY) || "")) {
   localStorage.setItem(FAVORITE_SONGS_KEY, JSON.stringify([]));

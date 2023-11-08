@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { ResultItem } from "../../interfaces/IResultItem";
 import Header from "../../components/Header";
-import searchAlbumsAPI, { ResultItem } from "../../services/searchAlbumsAPI";
+import searchAlbumsAPI from "../../services/searchAlbumsAPI";
 import Loading from "../Loading";
 import useHandleChange from "../../hooks/useHandleChange";
+import "./style.css";
 
 export default function Search() {
   const {
@@ -15,6 +17,7 @@ export default function Search() {
   const [items, setItems] = useState<ResultItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [saveName, setSaveName] = useState("");
+  const NUMBER_TWO = 2;
 
   const searchApi = async () => {
     setLoading(true);
@@ -30,7 +33,6 @@ export default function Search() {
     searchApi();
   }, []);
 
-  const num = 2;
   return (
     <div data-testid="page-search">
       <Header />
@@ -51,7 +53,7 @@ export default function Search() {
             className="search-button"
             type="button"
             data-testid="search-artist-button"
-            disabled={name.length < num}
+            disabled={name.length < NUMBER_TWO}
             onClick={searchApi}
           >
             Pesquisar
@@ -71,11 +73,11 @@ export default function Search() {
         {items.map(
           ({ artistName, collectionName, collectionId, artworkUrl100 }) => (
             <div key={collectionId} className="items">
+              <img src={artworkUrl100} alt={artistName} />
               <Link
                 to={`/album/${collectionId}`}
                 data-testid={`link-to-album-${collectionId}`}
               >
-                <img src={artworkUrl100} alt={artistName} />
                 <p>{collectionName}</p>
               </Link>
             </div>

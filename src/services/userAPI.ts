@@ -1,13 +1,8 @@
+import { User } from "../interfaces/IUser";
+
 const USER_KEY = 'user';
 const TIMEOUT = 1500;
 const SUCCESS_STATUS = 'OK';
-
-export type User = {
-  name: string,
-  email?: string,
-  image?: string,
-  description?: string,
-}
 
 const readUser = () => JSON.parse(localStorage.getItem(USER_KEY) || "");
 const saveUser = (user: User) => localStorage.setItem(USER_KEY, JSON.stringify(user));

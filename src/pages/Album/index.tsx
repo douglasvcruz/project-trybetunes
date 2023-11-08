@@ -1,20 +1,14 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { Song } from '../../interfaces/iSong';
 import Header from '../../components/Header';
 import getSongs from '../../services/musicsAPI';
 import MusicCard from '../../components/MusicCard';
-
-type Album = {
-  trackId: string;
-  artistName: string;
-  collectionName: string;
-  trackName: string;
-  previewUrl: string;
-}
+import "./style.css";
 
 export default function Album() {
-  const [saveAlbum, setSaveName] = useState<Album>({  artistName: "", collectionName: "", trackId: "", previewUrl: "", trackName: "" });
-  const [songs, setSongs] = useState<Album[]>([]);
+  const [saveAlbum, setSaveName] = useState<Song>({  artistName: "", collectionName: "", trackId: "", previewUrl: "", trackName: "" });
+  const [songs, setSongs] = useState<Song[]>([]);
   type QuizParams = {
     id: string;
   }

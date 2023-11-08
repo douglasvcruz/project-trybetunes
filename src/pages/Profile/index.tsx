@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import { getUser } from '../../services/userAPI';
+import { User } from '../../interfaces/IUser';
 import Header from '../../components/Header';
-import { User, getUser } from '../../services/userAPI';
 import Loading from '../Loading';
 
 export default function Profile() {

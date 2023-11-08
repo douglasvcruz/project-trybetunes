@@ -3,12 +3,13 @@ import { createUser } from '../../services/userAPI';
 import { useNavigate } from "react-router-dom";
 import Loading from '../Loading';
 import useHandleChange from '../../hooks/useHandleChange';
-const NUMBER_THREE = 3;
+import "./style.css";
 
 export default function Login() {
   const [loading, setLoading] = useState(false);
   const { value: { name }, onChange } = useHandleChange({ name: "" });
   const navigate = useNavigate();
+  const NUMBER_THREE = 3;
 
   const users = async () => {
     setLoading(true);

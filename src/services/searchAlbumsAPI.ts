@@ -1,13 +1,4 @@
-export type ResultItem = {
-  artistId: number;
-  artistName: string;
-  collectionId: number;
-  collectionName: string;
-  collectionPrice: number;
-  artworkUrl100: string;
-  releaseDate: string;
-  trackCount: number;
-};
+import { ResultItem } from "../interfaces/IResultItem";
 
 const searchAlbumsAPI = async (artist: string) => {
   const artistNameURL = encodeURI(artist).replaceAll("%20", "+");

@@ -1,0 +1,36 @@
+.music {
+  background-color: rgb(15, 99, 86);
+  border: 3px solid rgb(10, 82, 71);
+  border-radius: 10px;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  font-weight: 900;
+  margin: 20px;
+  padding: 30px;
+}
+
+.music p {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.music .carregar {
+  font-size: 14px;
+  margin-top: 20px;
+}
+
+.check {
+  margin-top: 20px;
+  transform: scale(2);
+}
+
+audio {
+  margin: 20px;
+  margin-top: 30px;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}

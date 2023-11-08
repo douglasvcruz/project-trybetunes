@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { addSong, getFavoriteSongs, removeSong, Song } from '../../services/favoriteSongsAPI';
 import Loading from '../../pages/Loading';
+import "./style.css";
 
 interface MusicCardProps {
   music: Song;
